@@ -130,8 +130,7 @@ A script similar to [`Evaluator.java`](Evaluator.java) will be used to evaluate 
 # Ensure Java is installed on your computer
 java -version
 
-# Navigate to the problems/hw1 directory
-cd problems/hw1
+# Navigate to the hw1 directory.
 
 # Compile the Evaluator.java file along with ValleyTraveler.java
 javac Evaluator.java ValleyTraveler.java
