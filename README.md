@@ -15,7 +15,7 @@ Implement a Java class called `ValleyTraveler` that operates on an array of dist
 
 3. **`remove()`:**  Excavates (removes) the first valley point from the current landscape and returns the associated treasure. This operation updates the landscape and its hidden treasures accordingly. 
 
-4. **`insert(int height)`:**  Creates a new landform with the given height *at the position where the first valley was just removed*. This operation updates the landscape and its hidden treasures accordingly.
+4. **`insert(int height)`:**  Creates a new landform with the given height *before the current first valley*. This operation updates the landscape and its hidden treasures accordingly.
 
 5. **`isEmpty()`:**  Returns `true` if the entire landscape is excavated (i.e., there are no landforms left), and `false` otherwise.
 
