@@ -97,8 +97,8 @@ Consider the following initial landscape: `[3, 2, 1, 4, 5]`.
 
 Submit your `ValleyTraveler.java` file and any additional Java files (if created) through Gradescope.
 
-- **Submission link:** 
-- **Deadline:** Feb 16th, 2025 at 11:59 PM EST.
+- **Submission link:** https://www.gradescope.com/courses/965721/assignments/5735169
+- **Deadline:** Feb 17th, 2025 at 11:55 PM EST.
 - **Late Submission Policy:** Late submissions will not be accepted.
 
 ## :bar_chart: Evaluation
