@@ -2,11 +2,24 @@
  * ValleyTraveler class represents a magical map that can identify and modify
  * valley points in the landscape of Numerica.
  * 
- * @author <Your Name>
+ * @author Saloni Shah
  */
 public class ValleyTraveler {
 
+    private class Node {
+        int value;
+        Node prev, next;
+
+        Node(int value) {
+            this.value = value;
+            this.prev = null;
+            this.next = null;
+        }
+    }
+
     // Instance variables to manage the landscape and collected treasures.
+    private Node head, tail;
+    private double totalTreasure = 0.0;
 
     /**
      * Constructor to initialize the magical map with the given landscape of Numerica.
@@ -15,6 +28,89 @@ public class ValleyTraveler {
      */
     public ValleyTraveler(int[] landscape) {
         // Initialize the internal state based on the provided landscape.
+        for(int i = landscape.length - 1; i >= 0; i--) {
+            insertAtHead(landscape[i]);
+        }
+    }
+
+    private void insertAtHead(int value) {
+        Node newNode = new Node(value);
+
+        if(head == null) {
+            head = newNode;
+            tail = newNode;
+        } else {
+            newNode.next = head;
+            head.prev = newNode;
+            head = newNode;
+        }
+    }
+
+    private double calculateTreasure(Node valley) {
+        Node currNode = head;
+        double treasure = 0.0;
+        int index = 0;
+
+        while(currNode != null && currNode != valley) {
+            treasure += currNode.value;
+            index++;
+            currNode = currNode.next;
+        }
+
+        treasure += valley.value;
+        index++;
+
+        return treasure / index;
+    }
+
+    private boolean isValley(Node node) {
+        if (node.prev == null && node.next != null) {
+            return node.value < node.next.value;
+        }
+        
+        if (node.next == null && node.prev != null) {
+            return node.value < node.prev.value;
+        }
+        
+        if (node.prev != null && node.next != null) {
+            return node.value < node.prev.value && node.value < node.next.value;
+        }
+        
+        return true;
+    }
+
+    private Node findFirstValley() {
+        Node curr = head;
+        
+        while(curr != null) {
+            if(isValley(curr)) {
+                return curr;
+            }
+            curr = curr.next;
+        }
+
+        return null;
+    }
+
+    private void removeValley(Node valley) {
+        if(isEmpty()) {
+            return;
+        }
+
+        if(valley.prev != null) {
+            valley.prev.next = valley.next;
+        } else {
+            head = valley.next;
+        }
+
+        if(valley.next != null) {
+            valley.next.prev = valley.prev;
+        } else {
+            tail = valley.prev;
+        }
+
+        valley.prev = null;
+        valley.next = null;
     }
 
     /**
@@ -24,7 +120,7 @@ public class ValleyTraveler {
      */
     public boolean isEmpty() {
         // Determine if the landscape is empty.
-        return false;
+        return head == null;
     }
 
     /**
@@ -33,8 +129,14 @@ public class ValleyTraveler {
      * @return The treasure associated with the first valley point.
      */
     public double getFirst() {
-        // Locate the first valley point and calculate its treasure.
-        return -1;
+        // Locate the first valley point and return their associated treasures
+        Node firstValleyPoint = findFirstValley();
+        
+        if(firstValleyPoint != null) {
+            return calculateTreasure(firstValleyPoint);
+        }
+
+        return -1.0;
     }
 
     /**
@@ -44,7 +146,20 @@ public class ValleyTraveler {
      */
     public double remove() {
         // Remove the first valley point and update internal state.
-        return -1;
+        if(isEmpty()) {
+            return -1.0;
+        }
+        
+        Node firstValleyPoint = findFirstValley();
+
+        if(firstValleyPoint != null) {
+            double treasure = calculateTreasure(firstValleyPoint);
+            totalTreasure += treasure;
+            removeValley(firstValleyPoint);
+            return treasure;
+        }
+
+        return -1.0;
     }
 
     /**
@@ -54,6 +169,24 @@ public class ValleyTraveler {
      */
     public void insert(int height) {
         // Insert a new landform at the correct position.
+        Node newNode = new Node(height);
+        Node firstValleyPoint = findFirstValley();
+
+        if(firstValleyPoint == null) {
+            insertAtHead(height);
+            return;
+        }
+
+        newNode.next = firstValleyPoint;
+        newNode.prev = firstValleyPoint.prev;
+
+        if(firstValleyPoint.prev != null) {
+            firstValleyPoint.prev.next = newNode;
+        } else {
+            head = newNode;
+        }
+
+        firstValleyPoint.prev = newNode;
     }
 
     /**
@@ -62,7 +195,7 @@ public class ValleyTraveler {
      * @return The total treasure collected.
      */
     public double getTotalTreasure() {
-        // Calculate and return the total treasure collected.
-        return -1.0;
+        // Return the total treasure collected.
+        return totalTreasure;
     }
 }
