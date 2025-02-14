@@ -8,10 +8,12 @@ public class ValleyTraveler {
 
     private class Node {
         int value;
+        double prefixSum;
         Node prev, next;
 
         Node(int value) {
             this.value = value;
+            this.prefixSum = 0;
             this.prev = null;
             this.next = null;
         }
@@ -31,6 +33,7 @@ public class ValleyTraveler {
         for(int i = landscape.length - 1; i >= 0; i--) {
             insertAtHead(landscape[i]);
         }
+        updatePrefixSums();
     }
 
     private void insertAtHead(int value) {
@@ -44,23 +47,28 @@ public class ValleyTraveler {
             head.prev = newNode;
             head = newNode;
         }
+        updatePrefixSums();
+    }
+
+    private void updatePrefixSums() {
+        Node curr = head;
+        double sum = 0;
+        int index = 0;
+
+        while (curr != null) {
+            sum += curr.value;
+            curr.prefixSum = sum / (index + 1);
+            index++;
+            curr = curr.next;
+        }
     }
 
     private double calculateTreasure(Node valley) {
-        Node currNode = head;
-        double treasure = 0.0;
-        int index = 0;
-
-        while(currNode != null && currNode != valley) {
-            treasure += currNode.value;
-            index++;
-            currNode = currNode.next;
+        if(valley.prev == null) {
+            return valley.prefixSum;
         }
 
-        treasure += valley.value;
-        index++;
-
-        return treasure / index;
+        return valley.prefixSum;
     }
 
     private boolean isValley(Node node) {
@@ -111,6 +119,8 @@ public class ValleyTraveler {
 
         valley.prev = null;
         valley.next = null;
+
+        updatePrefixSums();
     }
 
     /**
@@ -156,7 +166,7 @@ public class ValleyTraveler {
             double treasure = calculateTreasure(firstValleyPoint);
             totalTreasure += treasure;
             removeValley(firstValleyPoint);
-            return treasure;
+            return firstValleyPoint.prefixSum;
         }
 
         return -1.0;
@@ -187,6 +197,8 @@ public class ValleyTraveler {
         }
 
         firstValleyPoint.prev = newNode;
+
+        updatePrefixSums();
     }
 
     /**
